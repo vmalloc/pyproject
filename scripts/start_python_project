@@ -1,0 +1,44 @@
+#! /usr/bin/python
+# -*- mode: python -*-
+import os
+import posix
+from optparse import OptionParser
+from jinja2 import Template
+
+SKELETON_PATH = os.path.join(os.path.realpath(os.path.dirname(__file__)),
+                             '..', 'pyproject', 'skeleton')
+
+parser = OptionParser("%prog [options...] directory")
+
+def create_directory(directory, params):
+    os.makedirs(directory)
+    for subdir in ['scripts', params['projname'], 'tests']:
+        os.makedirs(os.path.join(directory, subdir))
+    render_setup_file(directory, params)
+
+def render_setup_file(directory, params):
+    with open(os.path.join(SKELETON_PATH, 'setup.py.jinja'), "rb") as infile:
+        template = Template(infile.read())
+    with open(os.path.join(directory, 'setup.py'), 'wb') as outfile:
+        outfile.write(template.render(params))
+def get_dest_directory(options, args):
+    return args[0]
+
+def get_params(options, directory):
+    returned = {}
+    for param, display, default in [
+        ('projname', 'Project Name', os.path.basename(directory)),
+        ('description', 'Description', ''),
+        ('author', 'Author', posix.getlogin()),
+        ]:
+        value = raw_input("%s (default: %s): " % (display, default)).strip()
+        if not value:
+            value = default
+        returned[param] = value
+    return returned
+
+if __name__ == '__main__':
+    options, args = parser.parse_args()
+    directory = get_dest_directory(options, args)
+    params = get_params(options, directory)
+    create_directory(directory, params)
