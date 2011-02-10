@@ -1,26 +1,43 @@
 #! /usr/bin/python
 # -*- mode: python -*-
+from __future__ import print_function
 import os
 import posix
 from optparse import OptionParser
-from jinja2 import Template
-
-SKELETON_PATH = os.path.join(os.path.realpath(os.path.dirname(__file__)),
-                             '..', 'pyproject', 'skeleton')
+from pyproject import SETUP_FILE_TEMPLATE
+from pyproject import DOCTEST_TEST_FILE_TEMPLATE
 
 parser = OptionParser("%prog [options...] directory")
 
 def create_directory(directory, params):
-    os.makedirs(directory)
+    _try_makedirs(directory)
     for subdir in ['scripts', params['projname'], 'tests']:
-        os.makedirs(os.path.join(directory, subdir))
+        _try_makedirs(os.path.join(directory, subdir))
+    with open(os.path.join(directory, params['projname'], '__init__.py'), 'wb') as init_file:
+        print('__version__ = "0.0.1"', file=init_file)
+    with open(os.path.join(directory, "README.rst"), 'wb') as readme_file:
+        pass
     render_setup_file(directory, params)
+    create_tests_directory(directory, params)
 
 def render_setup_file(directory, params):
-    with open(os.path.join(SKELETON_PATH, 'setup.py.jinja'), "rb") as infile:
-        template = Template(infile.read())
     with open(os.path.join(directory, 'setup.py'), 'wb') as outfile:
-        outfile.write(template.render(params))
+        outfile.write(SETUP_FILE_TEMPLATE.render(params))
+
+def create_tests_directory(directory, params):
+    tests_dir = os.path.join(directory, "tests")
+    _try_makedirs(tests_dir)
+    with open(os.path.join(tests_dir, 'test__readme_doctest.py'), 'wb') as test_file:
+        test_file.write(DOCTEST_TEST_FILE_TEMPLATE.render(params))
+
+
+def _try_makedirs(path):
+    if os.path.isdir(path):
+        return
+    if os.path.exists(path):
+        raise OSError("%s already exists, but not a directory" % path)
+    os.makedirs(path)
+
 def get_dest_directory(options, args):
     return args[0]
 
