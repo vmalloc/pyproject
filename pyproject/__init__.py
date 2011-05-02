@@ -5,7 +5,7 @@ __version__ = "0.0.1"
 SETUP_FILE_TEMPLATE = Template("""
 import os
 import itertools
-from distutils.core import setup
+from setuptools import setup
 
 from {{projname}} import __version__ as VERSION
 
@@ -38,6 +38,7 @@ setup(name="{{projname}}",
       #url="your.url.here",
       version=VERSION,
       packages=list(_find_all_subpackages("{{projname}}")),
+      install_requires=[],
       scripts=[],
       )
 

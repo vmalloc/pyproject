@@ -3,6 +3,7 @@
 from __future__ import print_function
 import os
 import posix
+from platform import python_version
 from optparse import OptionParser
 from pyproject import SETUP_FILE_TEMPLATE
 from pyproject import DOCTEST_TEST_FILE_TEMPLATE
@@ -47,6 +48,7 @@ def get_params(options, directory):
         ('projname', 'Project Name', os.path.basename(directory)),
         ('description', 'Description', ''),
         ('author', 'Author', posix.getlogin()),
+        ('pyversion', 'Python Version', '.'.join(python_version().split('.')[:2])),
         ]:
         value = raw_input("%s (default: %s): " % (display, default)).strip()
         if not value:
