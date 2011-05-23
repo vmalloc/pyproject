@@ -1,13 +1,13 @@
 from jinja2 import Template
-
-__version__ = "0.0.1"
+from .__version__ import __version__
 
 SETUP_FILE_TEMPLATE = Template("""
 import os
 import itertools
 from setuptools import setup, find_packages
 
-from {{projname}} import __version__ as VERSION
+with open(os.path.join(os.path.dirname(__file__), "{{projname}}", "__version__.py")) as version_file:
+    exec version_file.read()
 
 setup(name="{{projname}}",
       classifiers = [
@@ -21,8 +21,8 @@ setup(name="{{projname}}",
       author="{{author}}",
       author_email="{{author_email}}",
       #url="your.url.here",
-      version=VERSION,
-      packages=list(exclude=["tests"]),
+      version=__version__,
+      packages=find_packages(exclude=["tests"]),
       install_requires=[],
       scripts=[],
       )

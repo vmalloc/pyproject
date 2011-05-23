@@ -15,7 +15,9 @@ def create_directory(directory, params):
     for subdir in ['scripts', params['projname'], 'tests']:
         _try_makedirs(os.path.join(directory, subdir))
     with open(os.path.join(directory, params['projname'], '__init__.py'), 'wb') as init_file:
-        print('__version__ = "0.0.1"', file=init_file)
+        print('from .__version__ import __version__', file=init_file)
+    with open(os.path.join(directory, params['projname'], '__version__.py'), 'wb') as version_file:
+        print('__version__ = "0.0.1"', file=version_file)
     with open(os.path.join(directory, "README.rst"), 'wb') as readme_file:
         pass
     render_setup_file(directory, params)

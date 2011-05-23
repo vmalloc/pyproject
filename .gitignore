@@ -1,2 +1,4 @@
 build
 *.pyc
+dist
+pyproject.egg-info

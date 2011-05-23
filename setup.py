@@ -1,6 +1,7 @@
-from distutils.core import setup
-
-from pyproject import __version__ as VERSION
+import os
+from setuptools import setup
+with open(os.path.join(os.path.dirname(__file__), "pyproject", "__version__.py"), "rb") as version_file:
+    exec version_file.read()
 
 setup(name="pyproject",
       classifiers = [
@@ -14,7 +15,8 @@ setup(name="pyproject",
       author="Rotem Yaari",
       author_email="vmalloc@gmail.com",
       url="http://github.com/vmalloc/pyproject",
-      version=VERSION,
+      version=__version__,
       packages=["pyproject"],
       scripts=['scripts/start_python_project'],
+      install_requires=["jinja2"]
       )
