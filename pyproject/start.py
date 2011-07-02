@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- mode: python -*-
 from __future__ import print_function
 import os
@@ -9,19 +8,32 @@ from pyproject import SETUP_FILE_TEMPLATE
 from pyproject import DOCTEST_TEST_FILE_TEMPLATE
 
 parser = OptionParser("%prog [options...] directory")
+parser.add_option("-d", "--defaults", action="store_true", dest="defaults", default=False)
+parser.add_option("-n", "--namespace", action="store_true", default=False, dest="create_namespace_packages")
 
-def create_directory(directory, params):
+def create_directory(options, directory, params):
     _try_makedirs(directory)
-    for subdir in ['scripts', params['projname'], 'tests']:
+    projname_parts = params['projname'].split(".")
+    _create_main_structure(options, directory, projname_parts)
+    for subdir in ['scripts', 'tests']:
         _try_makedirs(os.path.join(directory, subdir))
-    with open(os.path.join(directory, params['projname'], '__init__.py'), 'wb') as init_file:
-        print('from .__version__ import __version__', file=init_file)
-    with open(os.path.join(directory, params['projname'], '__version__.py'), 'wb') as version_file:
-        print('__version__ = "0.0.1"', file=version_file)
     with open(os.path.join(directory, "README.rst"), 'wb') as readme_file:
         pass
     render_setup_file(directory, params)
     create_tests_directory(directory, params)
+
+def _create_main_structure(options, directory, parts):
+    for index, part in enumerate(parts):
+        directory = os.path.join(directory, part)
+        _try_makedirs(directory)
+        with open(os.path.join(directory, "__init__.py"), "wb") as init_file:
+            if index == len(parts) - 1:
+                print('from .__version__ import __version__', file=init_file)
+            elif options.create_namespace_packages:
+                print("__import__('pkg_resources').declare_namespace(__name__)", file=init_file)
+
+    with open(os.path.join(directory, '__version__.py'), 'wb') as version_file:
+        print('__version__ = "0.0.1"', file=version_file)
 
 def render_setup_file(directory, params):
     with open(os.path.join(directory, 'setup.py'), 'wb') as outfile:
@@ -52,14 +64,24 @@ def get_params(options, directory):
         ('author', 'Author', posix.getlogin()),
         ('pyversion', 'Python Version', '.'.join(python_version().split('.')[:2])),
         ]:
-        value = raw_input("%s (default: %s): " % (display, default)).strip()
-        if not value:
+        if options.defaults:
             value = default
+        else:
+            value = raw_input("%s (default: %s): " % (display, default)).strip()
+            if not value:
+                value = default
         returned[param] = value
+    projname_parts = returned["projname_parts"] = returned["projname"].split(".")
+    ns_packages = returned["ns_packages"] = []
+    if options.create_namespace_packages:
+        for part in projname_parts[:-1]:
+            if ns_packages:
+                part = "{0}.{1}".format(ns_packages[-1], part)
+            ns_packages.append(part)
     return returned
 
-if __name__ == '__main__':
+def main():
     options, args = parser.parse_args()
     directory = get_dest_directory(options, args)
     params = get_params(options, directory)
-    create_directory(directory, params)
+    create_directory(options, directory, params)

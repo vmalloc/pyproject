@@ -6,7 +6,7 @@ import os
 import itertools
 from setuptools import setup, find_packages
 
-with open(os.path.join(os.path.dirname(__file__), "{{projname}}", "__version__.py")) as version_file:
+with open(os.path.join(os.path.dirname(__file__), {% for part in projname_parts%}"{{part}}",{% endfor %} "__version__.py")) as version_file:
     exec version_file.read()
 
 setup(name="{{projname}}",
@@ -25,6 +25,7 @@ setup(name="{{projname}}",
       packages=find_packages(exclude=["tests"]),
       install_requires=[],
       scripts=[],
+      namespace_packages=[{% for ns_package in ns_packages%}"{{ns_package}}",{% endfor %}]
       )
 
 """)

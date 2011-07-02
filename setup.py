@@ -17,6 +17,8 @@ setup(name="pyproject",
       url="http://github.com/vmalloc/pyproject",
       version=__version__,
       packages=["pyproject"],
-      scripts=['scripts/start_python_project'],
+      entry_points = dict(
+        console_scripts = ["start_python_project = pyproject.start:main"]
+        ),
       install_requires=["jinja2"]
       )
