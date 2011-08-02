@@ -1,8 +1,7 @@
 from jinja2 import Template
 from .__version__ import __version__
 
-SETUP_FILE_TEMPLATE = Template("""
-import os
+SETUP_FILE_TEMPLATE = Template("""import os
 import itertools
 from setuptools import setup, find_packages
 
