@@ -11,16 +11,12 @@ with open(os.path.join(os.path.dirname(__file__), {% for part in projname_parts%
 
 setup(name="{{projname}}",
       classifiers = [
-          "Development Status :: 4 - Beta",
-          "Intended Audience :: Developers",
-          "License :: OSI Approved :: BSD License",
           "Programming Language :: Python :: {{pyversion}}",
           ],
       description="{{description}}",
-      #license="Proprietary",
+      license="{{license_name}}",
       author="{{author}}",
       author_email="{{author_email}}",
-      #url="your.url.here",
       version=__version__,
       packages=find_packages(exclude=["tests"]),
       install_requires=[],
@@ -29,6 +25,7 @@ setup(name="{{projname}}",
       )
 
 """)
+
 
 DOCTEST_TEST_FILE_TEMPLATE = Template("""from unittest import TestCase
 import os

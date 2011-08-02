@@ -1,11 +1,13 @@
 # -*- mode: python -*-
 from __future__ import print_function
+import time
 import os
 import posix
 from platform import python_version
 from optparse import OptionParser
-from pyproject import SETUP_FILE_TEMPLATE
-from pyproject import DOCTEST_TEST_FILE_TEMPLATE
+from . import SETUP_FILE_TEMPLATE
+from . import DOCTEST_TEST_FILE_TEMPLATE
+from .licenses import LICENSES
 
 parser = OptionParser("%prog [options...] directory")
 parser.add_option("-d", "--defaults", action="store_true", dest="defaults", default=False)
@@ -20,6 +22,7 @@ def create_directory(options, directory, params):
     with open(os.path.join(directory, "README.rst"), 'wb') as readme_file:
         pass
     render_setup_file(directory, params)
+    render_license_file(directory, params)
     create_tests_directory(directory, params)
 
 def _create_main_structure(options, directory, parts):
@@ -62,7 +65,9 @@ def get_params(options, directory):
         ('projname', 'Project Name', os.path.basename(directory)),
         ('description', 'Description', ''),
         ('author', 'Author', posix.getlogin()),
+        ('author_email', 'Email', ''),
         ('pyversion', 'Python Version', '.'.join(python_version().split('.')[:2])),
+        ('license', 'License ({})'.format('/'.join(LICENSES)), 'proprietary')
         ]:
         if options.defaults:
             value = default
@@ -78,7 +83,14 @@ def get_params(options, directory):
             if ns_packages:
                 part = "{0}.{1}".format(ns_packages[-1], part)
             ns_packages.append(part)
+    returned['license'] = license = LICENSES[returned['license']]
+    returned['license_name'] = license['name']
+    returned['year'] = time.localtime().tm_year
     return returned
+
+def render_license_file(directory, params):
+    with open(os.path.join(directory, "LICENSE"), "wb") as license_file:
+        license_file.write(params['license']['template'].render(params))
 
 def main():
     options, args = parser.parse_args()
