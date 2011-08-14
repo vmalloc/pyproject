@@ -92,7 +92,7 @@ def render_license_file(directory, params):
     with open(os.path.join(directory, "LICENSE"), "wb") as license_file:
         license_file.write(params['license']['template'].render(params))
 
-def main():
+def main_entry_point():
     options, args = parser.parse_args()
     directory = get_dest_directory(options, args)
     params = get_params(options, directory)

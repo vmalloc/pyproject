@@ -18,7 +18,11 @@ setup(name="pyproject",
       version=__version__,
       packages=["pyproject"],
       entry_points = dict(
-        console_scripts = ["start_python_project = pyproject.start:main"]
+        console_scripts = [
+              "start_python_project = pyproject.start:main_entry_point",
+              "bump_version = pyproject.bump:main_entry_point",
+              ]
+        
         ),
       install_requires=["jinja2"]
       )
