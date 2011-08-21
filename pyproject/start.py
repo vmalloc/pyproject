@@ -23,6 +23,7 @@ def create_directory(options, directory, params):
         pass
     render_setup_file(directory, params)
     render_license_file(directory, params)
+    render_tox_file(directory, params)
     create_tests_directory(directory, params)
 
 def _create_main_structure(options, directory, parts):
@@ -41,6 +42,21 @@ def _create_main_structure(options, directory, parts):
 def render_setup_file(directory, params):
     with open(os.path.join(directory, 'setup.py'), 'wb') as outfile:
         outfile.write(SETUP_FILE_TEMPLATE.render(params))
+
+def render_tox_file(directory, params):
+    with open(os.path.join(directory, 'tox.ini'), 'wb') as outfile:
+        outfile.write(
+"""[tox]
+envlist = py26,py27,py32
+
+[testenv]
+deps=nose
+commands=nosetests
+
+[testenv:py26]
+deps=unittest2
+     nose
+""")
 
 def create_tests_directory(directory, params):
     tests_dir = os.path.join(directory, "tests")
