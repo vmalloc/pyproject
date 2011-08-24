@@ -46,8 +46,10 @@ def _shell(cmd):
 def _get_version_filename(args):
     matched = []
     for path, dirnames, filenames in os.walk("."):
-        if path == "." and "build" in dirnames:
-            dirnames.remove("build")
+        if path == ".":
+            for excluded in ['build', '.tox']:
+                if excluded in dirnames:
+                    dirnames.remove(excluded)
         for filename in filenames:
             if filename == "__version__.py":
                 matched.append(os.path.join(path, filename))
