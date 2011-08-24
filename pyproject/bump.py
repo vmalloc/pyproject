@@ -19,7 +19,9 @@ def main(args):
     new_version = _bump(old_version, args)
     print("Bumped from", _stringify(old_version), "to", _stringify(new_version), file=sys.stderr)
     with open(version_filename, "wb") as outfile:
-        print('__version__ = "{}"'.format(_stringify(new_version)), file=outfile)
+        new_version_string = bytes('__version__ = "{}"'.format(_stringify(new_version)), 'UTF-8')
+        outfile.write(new_version_string)
+        outfile.write(b"\n")
     _shell("git commit -a -m 'bump version'")
     _shell("git tag v{}".format(_stringify(new_version)))
     return 0
@@ -58,7 +60,7 @@ def _get_version_filename(args):
 
 def _get_version(filename):
     content = open(filename, "rb").read()
-    match = re.match(r"^__version__\s+=\s+\"(\d)\.(\d+)\.(\d+)\"\s*$", content, re.S | re.M)
+    match = re.match(r"^__version__\s+=\s+\"(\d)\.(\d+)\.(\d+)\"\s*$", content.decode('utf-8'), re.S | re.M)
     if not match:
         raise NotImplementedError() # pragma: no cover
     return list(map(int, match.groups()))

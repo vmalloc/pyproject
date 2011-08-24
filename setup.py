@@ -1,7 +1,7 @@
 import os
 from setuptools import setup
 with open(os.path.join(os.path.dirname(__file__), "pyproject", "__version__.py"), "rb") as version_file:
-    exec version_file.read()
+    exec(version_file.read())
 
 setup(name="pyproject",
       classifiers = [
@@ -22,7 +22,6 @@ setup(name="pyproject",
               "start_python_project = pyproject.start:main_entry_point",
               "bump_version = pyproject.bump:main_entry_point",
               ]
-        
         ),
       install_requires=["jinja2"]
       )
