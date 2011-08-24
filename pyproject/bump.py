@@ -18,10 +18,9 @@ def main(args):
     old_version = _get_version(version_filename)
     new_version = _bump(old_version, args)
     print("Bumped from", _stringify(old_version), "to", _stringify(new_version), file=sys.stderr)
-    with open(version_filename, "wb") as outfile:
-        new_version_string = bytes('__version__ = "{}"'.format(_stringify(new_version)), 'UTF-8')
-        outfile.write(new_version_string)
-        outfile.write(b"\n")
+    with open(version_filename, "w") as outfile:
+        print('__version__ = "{}"'.format(_stringify(new_version)),
+              file=outfile)
     _shell("git commit -a -m 'bump version'")
     _shell("git tag v{}".format(_stringify(new_version)))
     return 0
