@@ -51,7 +51,8 @@ envlist = py26,py27,py32
 
 [testenv]
 deps=nose
-commands=nosetests
+commands=nosetests -w {toxinidir}/tests
+changedir = {envdir}
 
 [testenv:py26]
 deps=unittest2
