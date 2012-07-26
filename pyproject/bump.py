@@ -22,7 +22,7 @@ def main(args):
         print('__version__ = "{}"'.format(_stringify(new_version)),
               file=outfile)
     _shell("git commit -a -m 'bump version'")
-    _shell("git tag v{}".format(_stringify(new_version)))
+    _shell("git tag {}".format(_stringify(new_version)))
     return 0
 
 def _bump(version, args):
