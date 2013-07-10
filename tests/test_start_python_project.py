@@ -1,5 +1,6 @@
 from tempfile import mkdtemp
 from unittest import TestCase
+import pyproject
 from pyproject.factory import create_package
 import os
 import shutil
@@ -28,7 +29,7 @@ class StartPythonPrjectTest(TestCase):
         )
 
     def test_directory_listing_in_root(self):
-        expected = set(os.listdir(os.path.join(os.path.dirname(__file__), "..", "pyproject", "_skeleton")))
+        expected = set(os.listdir(os.path.join(os.path.dirname(pyproject.__file__), "_skeleton")))
         expected.remove("{{name}}")
         expected.add(self.package_name)
         for x in list(expected):

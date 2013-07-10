@@ -1,1 +1,3 @@
-include pyproject/_skeleton/*
+include tox.ini tests/*
+recursive-include pyproject/_skeleton *
+recursive-exclude . *.pyc

@@ -15,7 +15,11 @@ setup(name="pyproject",
       author_email="vmalloc@gmail.com",
       version=__version__,
       packages=find_packages(exclude=["tests"]),
-      install_requires=[],
+      include_package_data=True,
+      install_requires=[
+          "Jinja2",
+      ],
+      zip_safe=False,
       entry_points = dict(
           console_scripts = [
               "start_python_project  = pyproject.entry_point:main_entry_point",
