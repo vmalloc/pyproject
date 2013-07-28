@@ -18,7 +18,7 @@ def main(args):
     ctx = parameters.build_context(args, interactive=True)
     unspecified = {arg for arg, value in ctx.items() if value is None}
     if unspecified:
-        parser.error("Unspecified value(s): {}".format(", ".join(sorted(unsuccessful))))
+        parser.error("Unspecified value(s): {}".format(", ".join(sorted(unspecified))))
     create_package(args.dest_dir, context=ctx)
     return 0
 
