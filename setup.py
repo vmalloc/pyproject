@@ -22,7 +22,8 @@ setup(name="pyproject",
       zip_safe=False,
       entry_points = dict(
           console_scripts = [
-              "start_python_project  = pyproject.entry_point:main_entry_point",
+              "start_python_project = pyproject.entry_point:main_entry_point",
+              "bump_version = pyproject.bump_version:main_entry_point",
               ]
           ),
 
