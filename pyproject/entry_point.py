@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import argparse
 import logging
+import os
 import sys
 from .factory import create_package
 from .context import parameters
@@ -15,8 +16,8 @@ parser.add_argument("dest_dir")
 parameters.populate_parser(parser)
 
 def main(args):
-    ctx = parameters.build_context(args, interactive=True)
-    unspecified = {arg for arg, value in ctx.items() if value is None}
+    ctx = parameters.build_context(args, interactive=True, defaults={"name": os.path.basename(args.dest_dir)})
+    unspecified = {arg for arg, value in ctx.items() if value is None and parameters[arg].required}
     if unspecified:
         parser.error("Unspecified value(s): {}".format(", ".join(sorted(unspecified))))
     create_package(args.dest_dir, context=ctx)

@@ -19,7 +19,9 @@ setup(name="{{name}}",
       author_email="{{author_email}}",
       version=__version__, # pylint: disable=E0602
       packages=find_packages(exclude=["tests"]),
+{% if url %}
       url="{{url}}",
+{% endif %}
       install_requires=_INSTALL_REQUIERS,
       scripts=[],
       namespace_packages=[]
