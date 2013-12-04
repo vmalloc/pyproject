@@ -2,5 +2,5 @@
 envlist = {% for supported_version in supported_versions %}py{{supported_version|replace(".", "") }}{% if not loop.last %},{% endif %}{% endfor %}
 
 [testenv]
-commands=python {toxinidir}/_travis_build.py
+commands=python {toxinidir}/_test_build.py
 changedir = {toxinidir}
