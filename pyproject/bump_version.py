@@ -41,8 +41,9 @@ def _shell(cmd):
 def _get_version_filename(args):
     matched = []
     for path, dirnames, filenames in os.walk("."):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
         if path == ".":
-            for excluded in ['build', '.tox']:
+            for excluded in ['build']:
                 if excluded in dirnames:
                     dirnames.remove(excluded)
         for filename in filenames:
