@@ -27,7 +27,7 @@ class Parameters(object):
     def build_context(self, args, interactive=False, defaults=None):
         if not defaults:
             defaults = {}
-        returned = {"supported_versions": ["2.6", "2.7", "3.3"]}
+        returned = {"supported_versions": ["2.6", "2.7", "3.3", "3.4", "py"]}
         for parameter in self.parameters:
             value = getattr(args, parameter.name)
             if value is None:
